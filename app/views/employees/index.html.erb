@@ -1,0 +1,6 @@
+<%= render partial: 'partials/structure1', locals: {model_name: 'employee', 
+                                                         primary: 'tabbed_content', 
+                                                         secondary: nil,
+                                                         sidebar: nil} %>
+<!-- Add a button for new instances of object -->
+<%= render :partial => 'partials/add_new_object', locals: {model_name: 'employee'} %>

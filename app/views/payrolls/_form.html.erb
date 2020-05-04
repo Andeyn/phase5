@@ -1,0 +1,27 @@
+<%= form_with url: generate_store_payroll_path, method: :get, local: true do |f| %>
+
+ <div class="form-inputs">
+	<label for="two_weeks">
+		<a class="waves-effect waves-light btn" id="two_weeks" name="two_weeks">
+		  <%= f.submit "Two Weeks" %>
+			</a>
+	</label>
+
+	<label for="one_month">
+		<a class="waves-effect waves-light btn" id="one_month" name="one_month">
+			<%= f.submit "One Month" %></a>
+	</label>
+	<div class="card panel">
+		<h5>Custom</h5>
+	<span>
+		<%= date_field_tag :starting %>
+		<%= date_field_tag :ending %>
+	</span>
+	</label>
+	</div>		
+	</div>
+
+  <div class="form-actions">
+    <%= f.submit "Generate Payroll" %>
+  </div>
+<% end %>

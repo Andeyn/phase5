@@ -1,0 +1,12 @@
+<%# render partial: "partials/tabbed_content/all_tabs", locals: {tab_base: "shift", 
+                                                         primary_object: @upcoming_shifts,
+                                                         secondary_object: @past_shifts,
+                                                         tertiary_object: @completed_shifts,
+                                                         display_partial: ["shift_lists","shift_lists"],
+                                                         states: ['upcoming','past','completed']} %>
+
+<%= render partial: 'partials/index_structure', locals: {model_name: 'shift', 
+                                                         primary: 'tabbed_content', 
+                                                         secondary: nil,
+                                                         sidebar: nil} %>
+

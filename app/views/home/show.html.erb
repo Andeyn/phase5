@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col s8">
+    <%= render partial: "store_data" %>
+  </div>
+
+</div>
+
+<div>
+  <%= render :partial => "partials/object_options", 
+              locals: {model_name: "employee", object: @employee}%>
+  <%= render :partial => "partials/object_options", 
+              locals: {model_name: "store", object: @store}%>
+  <%= render :partial => "partials/object_options", 
+              locals: {model_name: "assignment", object: @assignment}%>                            
+</div>

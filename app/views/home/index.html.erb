@@ -1,0 +1,381 @@
+<!-- ADMINS -->
+<% if logged_in? && current_employee.role?(:admin) %>
+	<br/>
+	<div class="card hoverable center">
+		<center><p class="welcome_name">
+			Welcome, Admin <%= "#{current_employee.proper_name}" %> !
+		<br/>
+			Activity as of <%= (Time.now).strftime("%l:%M %P") %> on 
+			<%= (Time.now).strftime("%A") %>
+			<%= (Time.now).strftime("%B %e, %Y") %>
+		</p></center>
+	</div>
+
+	<div class= "card hoverable">
+	 <div class="card-panel">
+	  <div class="card-panel">
+	    <% if @active_stores.empty? %>
+	      <p>There are no <%= state.downcase %> stores at this time.</p>
+	    <% else %>
+	      <h4> Active Stores owned by AMC</h4>
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Name</th>
+	          <th>Manager</th>
+	          <th>Minors</th>
+	          <th>Slackers</th>
+	          <th>Current Assignments</th>
+	          <th class="align_center">Payroll</th>
+	          <th class="align_center">Options</th>
+	        </thead>
+	        <% @active_stores.each do |store| %>
+	          <tr>
+	            <td><%= link_to store.name, store_path(store) %></td>
+	            <td><%= link_to store.employees.managers.first.proper_name, employee_path(store.employees.managers) %></td>
+	            <td><%= store.employees.younger_than_18.active.count %></td>
+	            <td><%= store.slacker_count %></td>
+	            <td><%= store.employees.active.count %></td>
+	            <td class="align_center">
+	              <%= link_to store_payroll_path(store) do %>
+	                <i class="material-icons">$$</i>
+	              <% end %>
+	            </td>
+	            <td class="align_center">
+	              <%= link_to edit_store_path(store) do %>
+	                <i class="material-icons">edit</i>
+	              <% end %>
+	            </td>
+	          </tr>
+	        <% end %>
+	      </table>
+	      <p class="supertiny"></p>
+	      <br />
+	      <%= will_paginate @active_stores, previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+	    <% end %>
+	  </div>
+	 </div>
+	</div>
+  <div class="row">
+    <div class="col s6 card-panel hoverable">
+	  <div class="card-panel">
+	  	<h4>Slacker Alert</h4>
+	  	<% if @active_employees.empty? %>
+	      <p>There are no <%= state.downcase %> employees at this time.</p>
+	    <% else %>
+
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Name</th>
+	          <th>Minor</th>
+	          <th>Missed Shifts</th>
+	          <th class="align_center">Payroll</th>
+	          <th class="align_center">Options</th>
+	        </thead>
+	        <% @active_employees.each do |emp| %>
+	          <tr>
+	            <td><%= link_to emp.name, employee_path(emp) %></td>
+	            <td><%= emp.minor %></td>
+	            <td><%= emp.shifts.missed.count %></td>
+	            <td class="align_center">
+	              <%# link_to store_payroll_path(store) do %>
+	                <i class="material-icons">$$</i>
+	              <%# end %>
+	            </td>
+	            <td class="align_center">
+	              <%= link_to edit_employee_path(emp) do %>
+	                <i class="material-icons">edit</i>
+	              <% end %>
+	            </td>
+	          </tr>
+	        <% end %>
+	      </table>
+	      <p class="supertiny"></p>
+	      <br />
+	      <%= will_paginate @active_stores, previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+	    <% end %>
+	  </div>
+	</div>
+
+	<div class= "col s6 card-panel hoverable">
+	  <div class="card-panel ">
+	  	<h4>Quick Links</h4>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'job'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'employee'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'shift'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'assignment'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'store'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'pay_grade'} %>
+		<br/><br/>
+		<%= render :partial => "partials/add_new_object", locals: {model_name: 'pay_grade_rate'} %>
+		<br/><br/>
+	  </div>
+    </div>
+  </div>
+
+<!-- MANAGERS -->
+<% elsif logged_in? && current_employee.role?(:manager) %>
+	<div class="card hoverable home center">
+		<center><p class="welcome_name">Welcome, Manager <%= "#{current_employee.proper_name}" %> to your store at 
+		<%= "#{current_employee.stores.first.name}" %> ! 
+		<br/>
+		Activity as of <%= (Time.now).strftime("%l:%M %P") %> on 
+		<%= (Time.now).strftime("%A") %>
+		<%= (Time.now).strftime("%B %e, %Y") %>
+	</p></center>
+	</div>
+	<div class="row">
+	   <div class= "col s6 card hoverable">
+		  	<h4>Unrecorded Reports</h4>
+			<%# if ! current_employee.assignments.current.first.store.employees.empty? %>
+				<!-- <p>There are no unrecorded reports at this time.</p> -->
+			<ul class="collapsible">
+		    
+			  <% @store_employees.each do |emp| %>
+			     <%if emp.assignments.current.first.shifts.completed.nil? %>
+			     	<p> All shifts have been recorded </p>
+			     <% else %>
+				    <li>
+				      <div class="collapsible-header"> <%= emp.name %> </div>
+					  <div class="collapsible-body">
+				 		<table class="striped highlight">
+				          <thead>
+				            <th>Employee</th>
+				            <th>Date</th>
+				            <th>Start time</th>
+				            <th>End time</th>
+				            <th>Jobs</th>
+				            <th>Checked</th>
+				          </thead>
+				          <% for shift in emp.shifts %>
+				            <tr>
+				              <td><%= link_to shift.employee.name, employee_path(shift.employee) %></td>
+				              <td><%= shift.date.strftime("%-m/%-d") %></td>
+				              <td><%= shift.start_time.strftime("%l:%M %P") %></td>
+				              <td><%= shift.end_time.strftime("%l:%M %P") %></td>
+				              <td>
+				                <%= simple_form_for :calvin, url: checked_path, method: :post, local: true do |f| %>
+				                  <%= f.input :job_checkboxes, collection: @jobs, input_html: { multiple: true } %>
+				                  <%= f.input :shift_id, as: :hidden, input_html: { value: shift.id } %>
+				                  <td>
+				                    <%= f.submit "Checked" %>
+				                  </td>
+				                <% end %>
+				              </td>
+
+				            </tr>
+				          <% end %>
+				        </table>
+					  </div>
+				    </li>
+			      <% end %>
+   			  <% end %>
+			</ul>	
+
+		</div>
+
+		<div class= "col s6 card hoverable">
+		  	<h4>Quick Links</h4>
+			<%= render :partial => "partials/add_new_object", locals: {model_name: 'assignment'} %>
+			<%= render :partial => "partials/add_new_object", locals: {model_name: 'employee'} %>
+			<%= render :partial => "partials/add_new_object", locals: {model_name: 'job'} %>
+	    </div>
+
+		</div>	
+	</div>	
+
+
+	<div class="row">
+	  <div class="col s6 card-panel hoverable">
+	  	<h4>Upcoming Shifts</h4>
+	    <%if @man_shifts.empty? %>
+	      <p>There are no upcoming shifts at this time.</p>
+	    <% else %>
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Employee</th>
+	          <th>Minor</th>
+	          <th>Slacker</th>
+	          <th>Start Time</th>
+	          <th>End Time</th>
+	          <th class="align_center">Payroll</th>
+	          <th class="align_center">Options</th>
+	        </thead>
+	        <% @man_shifts.upcoming.each do |shift| %>
+          	  <tr class="<%= cycle('dg_list_line_odd', 'dg_list_line_even') %>">
+	            <td><%= link_to shift.employee.name, employee_path(shift.employee) %></td>
+	            <td><%= shift.employee.minor %></td>
+	            <td><%= shift.employee.is_slacker %></td>
+                <td><%= shift.start_time.strftime("%l:%M %P") %></td>
+           		<td><%= shift.end_time.strftime("%l:%M %P") %></td>
+	            <td class="align_center">
+	              <%= link_to emp_payroll_path(shift.employee) do %>
+	                <i class="material-icons">$$</i>
+	              <% end %>
+	            </td>
+	            <td class="align_center">
+	              <%= link_to edit_employee_path(shift.employee) do %>
+	                <i class="material-icons">edit</i>
+	              <% end %>
+	            </td>
+	          </tr>
+	          
+	        <% end %>
+
+	      </table>
+	      <%= will_paginate @man_shifts, previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+	      <p class="supertiny"></p>
+	      <br />
+	      <% end %>
+	  </div>
+	</div>	
+	<div class="row">
+	<div class= "col s6 card">
+	  <div class="card-panel hoverable">
+	  	<h4>Past Shifts</h4>
+	    <%if @man_shifts.past.empty? %>
+	      <p>There are no past shifts at this time.</p>
+	    <% else %>
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Employee</th>
+	          <th>Minor</th>
+	          <th>Slacker</th>
+	          <th>Start Time</th>
+	          <th>End Time</th>
+	          <th class="align_center">Payroll</th>
+	          <th class="align_center">Options</th>
+	        </thead>
+	        <% @man_shifts.past.each do |shift| %>
+	          <tr>
+	            <td><%= link_to shift.employee.name, employee_path(shift.employee) %></td>
+	            <td><%= shift.employee.minor %></td>
+	            <td><%= shift.employee.is_slacker %></td>
+                <td><%= shift.start_time.strftime("%l:%M %P") %></td>
+           		<td><%= shift.end_time.strftime("%l:%M %P") %></td>
+	            <td class="align_center">
+	              <%= link_to emp_payroll_path(shift.employee) do %>
+	                <i class="material-icons">$$</i>
+	              <% end %>
+	            </td>
+	            <td class="align_center">
+	              <%= link_to edit_employee_path(shift.employee) do %>
+	                <i class="material-icons">edit</i>
+	              <% end %>
+	            </td>
+	          </tr>
+	          
+	        <% end %>
+
+	      </table>
+	      <%= will_paginate @man_shifts.for_past_days(7), previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+	      <p class="supertiny"></p>
+	      <br />
+	      <% end %>
+	  </div>
+	</div>
+	</div>
+
+<!-- MANAGERS -->
+<% elsif logged_in? && current_employee.role?(:employee) %>
+	<div class="card hoverable home center">
+		Welcome, Employee <%= "#{current_employee.proper_name}" %> to your store at 
+		<%= "#{current_employee.stores.first.name}" %> !
+		<br/>
+		Activity as of <%= (Time.now).strftime("%l:%M %P") %> on 
+		<%= (Time.now).strftime("%A") %>
+		<%= (Time.now).strftime("%B %e, %Y") %>
+	</div>
+
+	<div class= "card hoverable">
+	  <div class="card-panel hoverable">
+        <form action="#">
+
+	      <button type= "submit">
+	      	Clock In
+	      </button>
+
+	      <button type= "submit">
+	      	Clock Out
+	      </button>
+
+        </form>
+	  </div>
+	</div>
+
+	<div class= "card hoverable">
+	  <div class="card-panel hoverable">
+	  	<h4>Payroll Report</h4>
+			<%= link_to emp_payroll_path(current_employee) %>
+	  </div>
+	</div>
+
+
+	<div class= "card hoverable">
+	  <div class="card-panel hoverable">
+	  	<h4>Upcoming Shifts</h4>
+	    <%if current_employee.shifts.upcoming.empty? %>
+	      <p>There are no upcoming shifts at this time.</p>
+	    <% else %>
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Employee</th>
+	          <th>Date</th>
+	          <th>Start Time</th>
+	          <th>End Time</th>
+	        </thead>
+	        <% current_employee.shift.upcoming.each do |shift| %>
+	          <tr>
+	            <td><%= link_to shift.employee.name, employee_path(shift.employee) %></td>
+	            <td><%= shift.date.strftime("%-m/%-d") %></td>
+                <td><%= shift.start_time.strftime("%l:%M %P") %></td>
+           		<td><%= shift.end_time.strftime("%l:%M %P") %></td>
+	          </tr>
+	          
+	        <% end %>
+
+	      </table>
+	      <p class="supertiny"></p>
+	      <br />
+	      <%= will_paginate current_employee.shifts, previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>	      
+	      <% end %>
+	  </div>
+	</div>
+
+	<div class= "card hoverable">
+	  <div class="card-panel hoverable">
+	  	<h4>Past Shifts</h4>
+	    <%if current_employee.shifts.past.empty? %>
+	      <p>There are no past shifts at this time.</p>
+	    <% else %>
+	      <table class="striped highlight">
+	        <thead>
+	          <th>Employee</th>
+	          <th>Date</th>
+	          <th>Start Time</th>
+	          <th>End Time</th>
+	        </thead>
+	        <% current_employee.shifts.for_past_days(7).each do |shift| %>
+	          <tr>
+	            <td><%= link_to shift.employee.name, employee_path(shift.employee) %></td>
+	            <td><%= shift.date.strftime("%-m/%-d") %></td>
+                <td><%= shift.start_time.strftime("%l:%M %P") %></td>
+           		<td><%= shift.end_time.strftime("%l:%M %P") %></td>
+	          </tr>
+	          
+	        <% end %>
+
+	      </table>
+	      <p class="supertiny"></p>
+	      <br />
+  	      <%= will_paginate @man_shifts.for_past_days(7), previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+	      <% end %>
+	  </div>
+	</div>
+
+
+<% end %> <%#end for if employee type %> 

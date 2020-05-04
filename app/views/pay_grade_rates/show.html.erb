@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Pay grade:</strong>
+  <%= @pay_grade_rate.pay_grade_id %>
+</p>
+
+<p>
+  <strong>Rate:</strong>
+  <%= @pay_grade_rate.rate %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @pay_grade_rate.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @pay_grade_rate.end_date %>
+</p>
+
+<%= link_to 'Edit', edit_pay_grade_rate_path(@pay_grade_rate) %> |
+<%= link_to 'Back', pay_grade_rates_path %>

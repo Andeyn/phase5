@@ -1,0 +1,22 @@
+<%= simple_form_for(@shift) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.input :assignment_id, collection: Employee.alphabetical.active.to_a, include_blank: true %>
+    <%# f.input :, collection: Store.alphabetical.active.to_a, include_blank: true %>
+
+    <%= f.input :date, label_html: { class: 'active' } %>    
+    <%= f.input :start_time %>
+    <%= f.input :notes %>
+    <%= f.input :status %>
+    <%= f.input :end_time %>
+
+    
+
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

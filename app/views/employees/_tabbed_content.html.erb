@@ -1,0 +1,17 @@
+<div class="card" id="tabbed">
+  <tabs>
+
+    <tab name="Active Managers" v-bind:selected="true">
+      <%= render partial: 'employee_lists', locals: {employees: @active_managers, state: 'active', role:'manager'} %>
+    </tab>
+
+    <tab name="Active Employee">
+      <%= render partial: 'employee_lists', locals: {employees: @active_employees, state: 'active', role:'employee'} %>
+    </tab>
+
+    <tab name="Inactive Employee">
+      <%= render partial: 'employee_lists', locals: {employees: @inactive_employees, state: 'inactive', role:'employee'} %>
+    </tab>
+
+  </tabs>
+</div>

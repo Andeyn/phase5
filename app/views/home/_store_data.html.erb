@@ -1,0 +1,47 @@
+<div class= "card hoverable">
+  <div class="card-content hoverable">
+    <h5><%= @employee.proper_name %></h5>
+
+    <b><%= (@employee.role).capitalize %>&nbsp;&nbsp;</b><br>
+
+    <b>Phone&nbsp;&nbsp;</b><br>
+      <%= number_to_phone(@employee.phone) %><br /><br />
+
+    <b>Social Security Number&nbsp;&nbsp;</b><br>
+      <%= number_to_ssn(@employee.ssn) %><br /><br />
+
+    <b>Date of Birth&nbsp;&nbsp;</b><br>
+      <%= @employee.date_of_birth.strftime("%b %d, %Y")  %><br /><br />
+
+    <b><%= @employee.active ? "Active" : "Inactive" %> with AMC &nbsp;&nbsp;</b><br /><br />
+    
+    <b>Current Assignment&nbsp;&nbsp;</b><br>
+      <%= "n/a" if @current_assignment.nil? %><br /><br />
+      <tr>
+        <td><%= link_to "#{@current_assignment.store.name} Store", store_path(@current_assignment.store) unless @current_assignment.nil? %> </td>
+        <td>since <%= @current_assignment.start_date.strftime("%b %d, %Y") unless @current_assignment.nil? %>&nbsp;&nbsp;<br /><br />
+        </td>
+      </tr>
+  </div>
+</div>
+
+<div class= "card hoverable">
+  <div class="card-panel hoverable">
+    <% if @previous_assignments.empty? %>
+      <p></p>
+    <% else %>
+      <table class="striped highlight">
+        <thead>
+          <th>Previous Assignments</th>
+          <th>Dates</th>
+        </thead>
+        <% for asgn in @previous_assignments %>
+          <tr>
+            <td><%= link_to "#{asgn.store.name} Store", store_path(asgn.store) unless asgn.nil? %> </td>
+            <td><%=  "#{asgn.start_date.strftime("%-m/%d/%y")} - #{asgn.end_date.strftime("%-m/%d/%y")}" %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>

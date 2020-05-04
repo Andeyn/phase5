@@ -1,0 +1,17 @@
+<div id="tabbed">
+  <tabs>
+
+    <tab name="Upcoming Shifts" v-bind:selected="true">
+      <%= render :partial => "shift_lists", locals: {shifts: @upcoming_shifts, state: 'upcoming'} %>
+    </tab>
+
+    <tab name="Unrecorded Shifts">
+      <%= render :partial => "shift_lists", locals: {shifts: @unrecorded_shifts, state: 'unrecorded'} %>
+    </tab>
+
+    <tab name="Recorded Shifts">
+      <%= render :partial => "shift_lists", locals: {shifts: @recorded_shifts, state: 'Recorded'} %>
+    </tab>
+
+  </tabs>
+</div>

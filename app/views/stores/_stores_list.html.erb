@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-content">
+    <h4><%= state.capitalize %> Stores owned by AMC</h4>
+
+      <table class="striped highlight">
+        <thead>
+          <th>Name</th>
+          <th>Manager</th>
+          <th>Shifts Missed</th>
+          <th>Minors</th>
+          <th>Employees</th>
+          <th class="align_center">Payroll</th>
+          <th class="align_center">Options</th>
+        </thead>
+        <% for store in object %>
+          <tr class="<%= cycle('dg_list_line_odd', 'dg_list_line_even') %>">
+            <td><%= link_to store.name, store_path(store) %></td>
+            <td><%= link_to store.employees.managers.first.proper_name, employee_path(store.employees.managers) %></td>
+            <td><%= store.shifts.past.pending.count %></td>
+            <td><%= store.employees.younger_than_18.count %></td>
+            <td><%= store.employees.count %></td>
+            <td class="align_center">
+              <%= link_to store_payroll_path(store) do %>
+                <i class="material-icons">$$</i>
+              <% end %>
+            </td>
+            <td class="align_center">
+              <%= link_to edit_store_path(store) do %>
+                <i class="material-icons">edit</i>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <p class="supertiny"></p>
+      <br />
+      <%= will_paginate object, previous_label: "Previous&nbsp;", next_label: "&nbsp;Next" %>
+  </div>
+</div>

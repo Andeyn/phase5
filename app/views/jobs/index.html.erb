@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Jobs</h1>
+  <%= render :partial => "partials/add_new_object", locals: {model_name: 'job'} %>      
+
+<div class= "card hoverable">
+    <div class="card-panel hoverable">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Active</th>
+            <th>Options</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @jobs.each do |job| %>
+            <tr>
+              <td><%= job.name %></td>
+              <td><%= job.description %></td>
+              <td><%= job.active %></td>
+              <td>
+                <%= link_to show_jobs_path(job) do %>
+                  <i class="material-icons">zoom_in</i>
+                <% end %>
+                <%= link_to edit_job_path(job) do %>
+                  <i class="material-icons">edit</i>
+                <% end %>
+                <%= link_to delete_jobs_path(job), method: :delete, data: { confirm: 'Are you sure?' } do %>
+                  <i class="material-icons">delete</i>          
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
+</div>

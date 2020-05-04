@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @pay_grade.level %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @pay_grade.active %>
+</p>
+
+<%= link_to 'Edit', edit_pay_grade_path(@pay_grade) %> |
+<%= link_to 'Back', pay_grades_path %>

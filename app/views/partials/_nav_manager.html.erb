@@ -1,0 +1,28 @@
+<nav id="nav">
+  <div class="container">
+    <ul class="left hide-on-med-and-down side_nav">
+      <li>
+          <%= render :partial => "partials/title_with_search", locals: {title: ""} %>
+      </li>
+      <li><%= link_to 'My Account', employee_path(current_employee) %></li>      
+      <li><%= link_to 'Employees', employees_path %></li>
+      <li><%= link_to 'Shifts', shifts_path %></li>
+      <li><%= link_to 'Assignments', assignments_path %></li>
+      <li><%= link_to 'Jobs', jobs_path %></li>
+      <li><%= link_to 'Payroll', generate_store_payroll_path(current_employee.stores.first) %></li>
+    </ul>
+    <ul class="right">
+            <!-- content once logged in goes here -->            
+    <% if logged_in? %>
+    
+        <li id="login">
+
+            <%= link_to 'Logout', logout_path %>
+            <br>[<%= current_employee.proper_name %>:<%= current_employee.role %>]
+          <% else %>
+            <%= link_to 'Login', login_path %>
+          <% end %>
+        </li>
+    </ul> 
+  </div>
+</nav>

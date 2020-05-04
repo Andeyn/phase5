@@ -1,0 +1,15 @@
+<div id="tabbed">
+  <tabs>
+
+    <tab name="Current Assignments" v-bind:selected="true">
+      <%= render partial: 'assignments_list', locals: {assignments: @current_assignments, state: 'current'} %>
+    </tab>
+
+    <tab name="Past Assignments">
+      <%= render partial: 'assignments_list', locals: {assignments: @past_assignments, state: 'past'} %>
+    </tab>
+
+  </tabs>
+</div>
+
+<%= render :partial => "partials/add_new_object", locals: {model_name: 'assignment'} %>
